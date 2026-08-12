@@ -1,0 +1,34 @@
+import SwiftData
+import SwiftUI
+
+@main
+struct CopycoaApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unified)
+        .defaultSize(width: 1024, height: 600)
+        .windowResizability(.contentSize)
+        .commands {
+            CopycoaCommands()
+        }
+        .modelContainer(for: [Board.self, Card.self])
+
+        Window("Privacy Policy", id: "privacy-policy") {
+            PrivacyPolicyView()
+        }
+        .defaultSize(width: 540, height: 540)
+        .windowResizability(.contentSize)
+    }
+}
+
+/// Quits the app once its last window is closed, matching single-window macOS app behaviour.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        true
+    }
+}

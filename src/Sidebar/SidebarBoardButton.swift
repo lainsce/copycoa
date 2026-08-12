@@ -1,0 +1,162 @@
+import SwiftUI
+
+/// Keeps a canvas row visually stable while it is pressed. Selection feedback is provided
+/// by the row background, so the button itself should not fade its label during a click.
+private struct SidebarRowButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+    }
+}
+
+/// A keyboard- and accessibility-native board selector with a contextual delete action.
+struct SidebarBoardButton: View {
+    @Bindable var board: Board
+    let isSelected: Bool
+    let isEditing: Bool
+    let select: () -> Void
+    let beginEditing: () -> Void
+    let finishEditing: () -> Void
+    let delete: () -> Void
+
+    @State private var draftName = ""
+    @FocusState private var nameFieldFocused: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isHovered = false
+
+    var body: some View {
+        Group {
+            if isEditing {
+                nameEditor
+            } else {
+                Button(action: select) {
+                    rowLabel
+                }
+                .buttonStyle(SidebarRowButtonStyle())
+                .simultaneousGesture(
+                    TapGesture(count: 2).onEnded {
+                        beginEditing()
+                    }
+                )
+            }
+        }
+        .onHover { hovering in
+            isHovered = hovering
+        }
+        .animation(
+            reduceMotion ? nil : .easeOut(duration: 0.18),
+            value: isHovered
+        )
+        .animation(
+            reduceMotion ? nil : .snappy,
+            value: isSelected
+        )
+        .onChange(of: isEditing) { _, editing in
+            if editing {
+                draftName = board.name
+                Task { @MainActor in nameFieldFocused = true }
+            } else {
+                nameFieldFocused = false
+            }
+        }
+        .onChange(of: nameFieldFocused) { _, focused in
+            if !focused && isEditing {
+                commitName()
+            }
+        }
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityValue(Text("\(board.cards.count) cards"))
+        .contextMenu {
+            Button("Rename Canvas", systemImage: "pencil", action: beginEditing)
+            Button("Delete Canvas", systemImage: "trash", role: .destructive, action: delete)
+        }
+    }
+
+    private var rowLabel: some View {
+        HStack(spacing: 10) {
+            SidebarCanvasThumbnail(
+                cards: board.cards,
+                isSelected: isSelected
+            )
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: board.name)
+                    .font(.headline)
+                    .lineLimit(1)
+                    .foregroundStyle(.primary)
+
+                if let headerLabel = firstHeaderLabel {
+                    Text(verbatim: headerLabel)
+                        .font(.caption)
+                        .lineLimit(1)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 9)
+        .background(rowBackground)
+        .contentShape(.rect)
+    }
+
+    private var firstHeaderLabel: String? {
+        guard let header = board.cards.first(where: { $0.kind == .header }) else {
+            return nil
+        }
+
+        let text = header.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return text.isEmpty ? nil : text
+    }
+
+    private var nameEditor: some View {
+        HStack(spacing: 10) {
+            SidebarCanvasThumbnail(
+                cards: board.cards,
+                isSelected: true
+            )
+
+            TextField("Canvas name", text: $draftName)
+                .textFieldStyle(.plain)
+                .lineLimit(1)
+                .focused($nameFieldFocused)
+                .onSubmit(commitName)
+                .onExitCommand(perform: cancelName)
+        }
+        .font(.headline)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 9)
+        .background(rowBackground)
+        .contentShape(.rect)
+        .accessibilityLabel(Text("Canvas name"))
+    }
+
+    private var rowBackground: some View {
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill(
+                isSelected
+                    ? Color.accent.opacity(0.13)
+                    : Color.primary.opacity(isHovered ? 0.065 : 0)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(
+                        Color.accent.opacity(isSelected ? 0.42 : 0),
+                        lineWidth: 0.75
+                    )
+            }
+    }
+
+    private func commitName() {
+        let trimmed = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            board.name = trimmed
+        }
+        finishEditing()
+    }
+
+    private func cancelName() {
+        draftName = board.name
+        finishEditing()
+    }
+}
