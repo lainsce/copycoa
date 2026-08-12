@@ -26,12 +26,12 @@ src/                         application source
   PrivacyPolicy/             privacy policy window views
   *.swift                    app shell, commands, shared color helpers
 tests/                       Swift Testing tests
-../data/                     non-Swift files and resources in this checkout
+data/                       non-Swift files and resources in this checkout
 ```
 
-`../data/` is the workspace-level folder `/Users/nayu/Developer/Copycoa/data`, one level above this repository. It contains `Copycoa.xcassets`, `Copycoa.icon`, `Copycoa.entitlements`, `Localizable.xcstrings`, and `PrivacyInfo.xcprivacy`.
+`data/` is part of this repository. It contains `Copycoa.xcassets`, `Copycoa.icon`, `Copycoa.entitlements`, `Localizable.xcstrings`, and `PrivacyInfo.xcprivacy`.
 
-The Xcode project uses `PBXFileSystemSynchronizedRootGroup` for `src/` and `tests/`, so files placed below those roots are automatically target-managed. The `data` group is explicit because it lives outside the synchronized source roots; update the project file when adding or moving data resources.
+The Xcode project uses `PBXFileSystemSynchronizedRootGroup` for `src/` and `tests/`, so files placed below those roots are automatically target-managed. The `data` group is explicit because it contains resources outside the synchronized source roots; update the project file when adding or moving data resources.
 
 ## Architecture
 
@@ -83,9 +83,9 @@ The Xcode project uses `PBXFileSystemSynchronizedRootGroup` for `src/` and `test
 
 ## Data, localization, and privacy
 
-- Keep user-facing strings in `../data/Localizable.xcstrings`; use SwiftUI localization APIs and translator comments for interpolated strings.
+- Keep user-facing strings in `data/Localizable.xcstrings`; use SwiftUI localization APIs and translator comments for interpolated strings.
 - Keep `PrivacyInfo.xcprivacy` in the data resource set. Do not remove it during resource moves.
-- Entitlements are referenced by both Debug and Release as `../data/Copycoa.entitlements`.
+- Entitlements are referenced by both Debug and Release as `data/Copycoa.entitlements`.
 - Asset catalog and icon composer resources are explicit members of the app Resources build phase.
 
 ## Validation
@@ -99,19 +99,19 @@ find src tests -name '*.swift' -print0 | xargs -0 xcrun swiftc -frontend -parse 
 
 git diff --check
 
-plutil -lint ../data/Copycoa.entitlements
-plutil -lint ../data/PrivacyInfo.xcprivacy
+plutil -lint data/Copycoa.entitlements
+plutil -lint data/PrivacyInfo.xcprivacy
 ```
 
 For a string catalog check, compile to a temporary output directory:
 
 ```sh
 catalog_tmp=$(mktemp -d /tmp/Copycoa-xcstrings.XXXXXX)
-xcrun xcstringstool compile ../data/Localizable.xcstrings \
+xcrun xcstringstool compile data/Localizable.xcstrings \
   --output-directory "$catalog_tmp" --dry-run
 ```
 
-For asset metadata, run `find ../data/Copycoa.xcassets ../data/Copycoa.icon -name '*.json' -print0 | xargs -0 -n1 jq empty`; `xcrun actool --compile` can validate the catalog.
+For asset metadata, run `find data/Copycoa.xcassets data/Copycoa.icon -name '*.json' -print0 | xargs -0 -n1 jq empty`; `xcrun actool --compile` can validate the catalog.
 
 Use an unsigned macOS build when the host permits it:
 

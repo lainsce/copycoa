@@ -72,7 +72,7 @@
 				67FF08933027C17000F9DB17 /* Copycoa.icon */,
 			);
 			name = data;
-			path = ../data;
+			path = data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -279,7 +279,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Copycoa;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				AUTOMATION_APPLE_EVENTS = NO;
-				CODE_SIGN_ENTITLEMENTS = ../data/Copycoa.entitlements;
+				CODE_SIGN_ENTITLEMENTS = data/Copycoa.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -331,7 +331,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Copycoa;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				AUTOMATION_APPLE_EVENTS = NO;
-				CODE_SIGN_ENTITLEMENTS = ../data/Copycoa.entitlements;
+				CODE_SIGN_ENTITLEMENTS = data/Copycoa.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
