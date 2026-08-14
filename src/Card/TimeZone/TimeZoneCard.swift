@@ -1,5 +1,4 @@
 import CoreLocation
-import MapKit
 import SwiftUI
 
 /// A curated set of time zones with a representative coordinate for the map treatment.
@@ -19,6 +18,24 @@ nonisolated struct TimeZoneCardPreset: Identifiable, Sendable {
 
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
+
+    /// A pre-rendered, city-focused crop of the supplied world time-zone map.
+    /// Keeping one asset per city avoids relying on AppKit's incomplete SVG renderer.
+    var mapAssetName: String {
+        switch identifier {
+        case "America/Los_Angeles": "LosAngeles"
+        case "America/New_York": "NewYork"
+        case "America/Sao_Paulo": "SaoPaulo"
+        case "Europe/London": "London"
+        case "Europe/Rome": "Rome"
+        case "Europe/Berlin": "Berlin"
+        case "Africa/Cairo": "Cairo"
+        case "Asia/Kolkata": "Mumbai"
+        case "Asia/Tokyo": "Tokyo"
+        case "Australia/Sydney": "Sydney"
+        default: "Tokyo"
+        }
     }
 
     static let all: [Self] = [
@@ -82,7 +99,6 @@ private struct TimeZoneCardMetrics {
     var zoneFont: CGFloat { max(18, scaled(50)) }
     var offsetFont: CGFloat { max(30, scaled(88)) }
     var zoneSpacing: CGFloat { -max(1, scaled(4)) }
-    var locationCircleDiameter: CGFloat { max(40, scaled(190)) }
 }
 
 /// A compact, map-backed time-zone card whose palette follows local daylight at the selected
@@ -100,11 +116,7 @@ struct TimeZoneCardContent: View {
                 let metrics = TimeZoneCardMetrics(size: proxy.size)
 
                 ZStack(alignment: .topLeading) {
-                    mapSurface(
-                        preset: preset,
-                        isDaytime: isDaytime,
-                        circleDiameter: metrics.locationCircleDiameter
-                    )
+                    TimeZoneMapSurface(preset: preset, isDaytime: isDaytime)
 
                     LinearGradient(
                         colors: isDaytime
@@ -123,12 +135,12 @@ struct TimeZoneCardContent: View {
                         VStack(alignment: .leading, spacing: metrics.zoneSpacing) {
                             Text("GMT")
                                 .font(.system(size: metrics.zoneFont, weight: .regular, design: .rounded))
-                                .foregroundStyle(isDaytime ? .black.opacity(0.48) : .white.opacity(0.68))
+                                .foregroundStyle(.white.opacity(0.68))
                             Text(offset)
                                 .font(.system(size: metrics.offsetFont, weight: .medium, design: .rounded))
                         }
                     }
-                    .foregroundStyle(isDaytime ? .black : .white)
+                    .foregroundStyle(.white)
                     .padding(.horizontal, metrics.padding)
                     .padding(.vertical, metrics.padding)
                 }
@@ -140,42 +152,4 @@ struct TimeZoneCardContent: View {
         }
     }
 
-    @ViewBuilder
-    private func mapSurface(
-        preset: TimeZoneCardPreset,
-        isDaytime: Bool,
-        circleDiameter: CGFloat
-    ) -> some View {
-        Map(
-            position: .constant(.region(mapRegion(for: preset))),
-            interactionModes: []
-        ) {
-        }
-        .mapStyle(.standard(elevation: .flat, emphasis: .muted, pointsOfInterest: .excludingAll))
-        .environment(\.colorScheme, isDaytime ? .light : .dark)
-        .saturation(0)
-        .contrast(isDaytime ? 0.9 : 1.15)
-        .brightness(isDaytime ? 0.08 : -0.16)
-        .overlay {
-            Circle()
-                .fill(isDaytime ? .black.opacity(0.08) : .white.opacity(0.10))
-                .overlay {
-                    Circle()
-                        .stroke(
-                            isDaytime ? .black.opacity(0.48) : .white.opacity(0.52),
-                            lineWidth: 1
-                        )
-                }
-                .frame(width: circleDiameter, height: circleDiameter)
-        }
-        .allowsHitTesting(false)
-        .accessibilityHidden(true)
-    }
-
-    private func mapRegion(for preset: TimeZoneCardPreset) -> MKCoordinateRegion {
-        MKCoordinateRegion(
-            center: preset.coordinate,
-            span: MKCoordinateSpan(latitudeDelta: 24, longitudeDelta: 28)
-        )
-    }
 }

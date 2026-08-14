@@ -11,6 +11,11 @@ struct CopycoaApp: App {
         }
         .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
+        // The detail canvas extends beneath the hidden title bar, so let empty
+        // window background space remain a native window-drag region. Card
+        // gestures still own their cards; this only fills the gap left by the
+        // hidden title bar.
+        .windowBackgroundDragBehavior(.enabled)
         .defaultSize(width: 1024, height: 600)
         .windowResizability(.contentSize)
         .commands {

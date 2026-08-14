@@ -110,29 +110,12 @@ struct CanvasView: View {
             .focusedSceneValue(\.resizeCardAction, resizeSelectedCardAction)
             .focusedSceneValue(\.deleteCardAction, deleteSelectedCardAction)
             .focusedSceneValue(\.refreshWeatherAction, refreshSelectedWeatherAction)
-            .toolbar {
-                canvasToolbar
-            }
     }
 
     @ViewBuilder
     private var deleteConfirmationActions: some View {
         Button("Delete Card", role: .destructive, action: deletePendingCard)
         Button("Cancel", role: .cancel) { cardToDeleteID = nil }
-    }
-
-    @ToolbarContentBuilder
-    private var canvasToolbar: some ToolbarContent {
-        ToolbarSpacer(.flexible)
-        ToolbarItem(placement: .primaryAction) {
-            Button {
-                showsDotGrid.toggle()
-            } label: {
-                Image(systemName: showsDotGrid ? "circle.grid.3x3.fill" : "circle.grid.3x3")
-            }
-            .help(showsDotGrid ? "Hide Dot Grid" : "Show Dot Grid")
-            .accessibilityLabel(showsDotGrid ? "Hide Dot Grid" : "Show Dot Grid")
-        }
     }
 
     private var canvasWithSheets: some View {
