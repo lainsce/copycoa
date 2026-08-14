@@ -11,7 +11,7 @@ struct AddCardFanView: View {
         ZStack(alignment: .bottomTrailing) {
             if isExpanded {
                 AddCardPickerView(addCard: selectCard, animation: fanAnimation)
-                    .padding(.bottom, 72)
+                    .padding(.bottom, 56)
                     .transition(
                         .move(edge: .bottom)
                             .combined(with: .scale(scale: 0.96, anchor: .bottomTrailing))

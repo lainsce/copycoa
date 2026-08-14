@@ -29,8 +29,6 @@ struct AddCardPickerView: View {
         .frame(maxWidth: .infinity)
         .padding(8)
         .frame(minWidth: 360, maxWidth: 420)
-        // This is the bottom-toolbar surface. Keep the glass on the shared
-        // container; picker options and their artwork stay flat on that layer.
         .glassEffect(
             .regular.tint(panelTint),
             in: RoundedRectangle(cornerRadius: 20, style: .continuous)
@@ -58,8 +56,8 @@ struct AddCardPickerView: View {
 
     private var panelTint: Color {
         colorScheme == .dark
-            ? Color(hex: "#3A281B")
-            : Color(hex: "#F2E4D2")
+            ? Color(hex: "#181818")
+            : Color(hex: "#FFFFFF")
     }
 }
 
