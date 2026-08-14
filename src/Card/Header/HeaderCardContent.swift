@@ -23,7 +23,7 @@ struct HeaderCardContent: View {
                     .foregroundStyle(.primary)
             }
         }
-        .font(.title2.bold())
+        .font(.largeTitle.bold())
         .lineLimit(1)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onChange(of: isEditing) { _, editing in
