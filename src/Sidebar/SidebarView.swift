@@ -73,9 +73,8 @@ struct SidebarView: View {
             }
             .font(.body.bold())
             .frame(maxWidth: 105, maxHeight: 38)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(.gray.opacity(0.25))
+            .padding(.leading, 12)
+            .background(.gray.opacity(0.12))
             .containerShape(.capsule)
         }
         .buttonStyle(.plain)

@@ -20,8 +20,8 @@ struct WeatherCardContent: View {
 
                 VStack(alignment: .leading, spacing: 0) {
                     Text(verbatim: card.weatherSummaryValue)
-                        .font(.system(size: 15, weight: .regular))
-                        .lineSpacing(0.5)
+                        .font(.system(size: 12, weight: .regular))
+                        .lineSpacing(0.24)
                         .lineLimit(card.cardSize == .oneByOne ? 4 : 3)
                         .frame(
                             maxWidth: messageWidth(in: proxy.size, inset: inset),

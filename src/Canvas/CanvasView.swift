@@ -353,7 +353,7 @@ struct CanvasView: View {
     }
 
     private var canvasBackgroundColor: Color {
-        colorScheme == .dark ? .black : .white
+        colorScheme == .dark ? Color(hex: "#181818") : .white
     }
 
     /// The dot rows share the same origin as body-card placement. A header is structural and

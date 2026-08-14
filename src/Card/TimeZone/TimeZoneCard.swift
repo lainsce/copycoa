@@ -38,6 +38,28 @@ nonisolated struct TimeZoneCardPreset: Identifiable, Sendable {
         }
     }
 
+    /// Normalized position of the representative city in its pre-rendered map crop.
+    ///
+    /// The supplied SVG contains stylized zone artwork rather than a projection that can
+    /// be reliably queried at runtime. These anchors are therefore kept with the preset so
+    /// the marker follows the same crop as the highlighted zone, including the few cities
+    /// whose visual coastline is intentionally simplified in the source artwork.
+    var mapMarkerUnitPoint: CGPoint {
+        switch identifier {
+        case "America/Los_Angeles": CGPoint(x: 0.4462, y: 0.4658)
+        case "America/New_York": CGPoint(x: 0.4858, y: 0.5634)
+        case "America/Sao_Paulo": CGPoint(x: 0.3201, y: 0.6547)
+        case "Europe/London": CGPoint(x: 0.4650, y: 0.5152)
+        case "Europe/Rome": CGPoint(x: 0.4820, y: 0.4449)
+        case "Europe/Berlin": CGPoint(x: 0.4601, y: 0.4802)
+        case "Africa/Cairo": CGPoint(x: 0.4981, y: 0.4720)
+        case "Asia/Kolkata": CGPoint(x: 0.3130, y: 0.3725)
+        case "Asia/Tokyo": CGPoint(x: 0.4808, y: 0.5194)
+        case "Australia/Sydney": CGPoint(x: 0.5167, y: 0.6461)
+        default: CGPoint(x: 0.5, y: 0.5)
+        }
+    }
+
     static let all: [Self] = [
         Self(identifier: "America/Los_Angeles", city: "Los Angeles", latitude: 34.0522, longitude: -118.2437),
         Self(identifier: "America/New_York", city: "New York", latitude: 40.7128, longitude: -74.0060),

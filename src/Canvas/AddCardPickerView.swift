@@ -27,17 +27,14 @@ struct AddCardPickerView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(12)
+        .padding(8)
         .frame(minWidth: 360, maxWidth: 420)
-        .background {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(panelGradient)
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(.black.opacity(0.06), lineWidth: 1)
-        }
-        .shadow(color: .black.opacity(0.08), radius: 8, y: 4)
+        // This is the bottom-toolbar surface. Keep the glass on the shared
+        // container; picker options and their artwork stay flat on that layer.
+        .glassEffect(
+            .regular.tint(panelTint),
+            in: RoundedRectangle(cornerRadius: 20, style: .continuous)
+        )
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("Add Card"))
     }
@@ -59,19 +56,10 @@ struct AddCardPickerView: View {
             : Color(hex: "#F5E5D2")
     }
 
-    private var panelGradient: LinearGradient {
-        LinearGradient(
-            colors: [
-                colorScheme == .dark
-                    ? Color(hex: "#222222")
-                    : Color(hex: "#FFFFFF"),
-                colorScheme == .dark
-                    ? Color(hex: "#323232")
-                    : Color(hex: "#FAFAFA"),
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
+    private var panelTint: Color {
+        colorScheme == .dark
+            ? Color(hex: "#3A281B")
+            : Color(hex: "#F2E4D2")
     }
 }
 
