@@ -34,15 +34,16 @@ struct AddCardFanView: View {
             }
         } label: {
             Image(systemName: "plus")
-                .font(.system(size: 24, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .rotationEffect(.degrees(isExpanded ? 45 : 0))
-                .frame(width: 56, height: 56)
+                .frame(width: 38, height: 38)
         }
-        .buttonStyle(.plain)
-        .background(anchorGradient)
-        .foregroundStyle(.white)
-        .clipShape(.circle)
-        .cardChrome(cornerRadius: 999)
+        // The anchor is part of the canvas' bottom toolbar, so it is the one
+        // canvas control that gets the native glass treatment. The picker
+        // contents remain flat inside their shared toolbar surface.
+        .buttonStyle(.glass(.regular.interactive())).tint(glassTint)
+        .buttonBorderShape(.circle)
+        .foregroundStyle(.foreground)
         .accessibilityLabel(Text(anchorTitle))
         .accessibilityHint(Text("Shows card types"))
         .help(Text(anchorTitle))
@@ -61,16 +62,5 @@ struct AddCardFanView: View {
 
     private var fanAnimation: Animation? {
         reduceMotion ? nil : .snappy
-    }
-
-    private var anchorGradient: LinearGradient {
-        LinearGradient(
-            colors: [
-                glassTint.opacity(0.72),
-                glassTint,
-            ],
-            startPoint: .top,
-            endPoint: .bottom
-        )
     }
 }

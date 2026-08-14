@@ -30,12 +30,44 @@ private enum TimeZoneMapRenderer {
     }
 }
 
+private enum TimeZoneMapLayout {
+    /// Each focused crop is rendered to a 1200 × 1200 image by the asset generator.
+    private static let sourceSide: CGFloat = 1200
+    private static let imageZoom: CGFloat = 1.04
+
+    /// Maps a source-image unit point through the same aspect-fill and zoom transforms
+    /// applied to the map image, keeping the city marker on the highlighted city.
+    static func markerPosition(for unitPoint: CGPoint, in size: CGSize) -> CGPoint {
+        let imageScale = max(size.width / sourceSide, size.height / sourceSide)
+        let imageSide = sourceSide * imageScale
+        let imageOrigin = CGPoint(
+            x: (size.width - imageSide) / 2,
+            y: (size.height - imageSide) / 2
+        )
+        let imagePoint = CGPoint(
+            x: imageOrigin.x + unitPoint.x * imageSide,
+            y: imageOrigin.y + unitPoint.y * imageSide
+        )
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+
+        return CGPoint(
+            x: center.x + (imagePoint.x - center.x) * imageZoom,
+            y: center.y + (imagePoint.y - center.y) * imageZoom
+        )
+    }
+}
+
 struct TimeZoneMapSurface: View {
     let preset: TimeZoneCardPreset
     let isDaytime: Bool
 
     var body: some View {
         GeometryReader { proxy in
+            let markerPosition = TimeZoneMapLayout.markerPosition(
+                for: preset.mapMarkerUnitPoint,
+                in: proxy.size
+            )
+
             ZStack {
                 Color(red: 0.05, green: 0.05, blue: 0.05)
 
@@ -48,18 +80,24 @@ struct TimeZoneMapSurface: View {
                         .frame(width: proxy.size.width, height: proxy.size.height)
                 }
 
-                // The crops are centered on the selected city, so this restrained marker
-                // lands on the city without introducing labels or map chrome.
-                Circle()
-                    .fill(.white.opacity(0.10))
-                    .frame(width: 30, height: 30)
-                    .overlay {
-                        Circle()
-                            .stroke(.white.opacity(0.54), lineWidth: 1)
-                    }
-                Circle()
-                    .fill(.white)
-                    .frame(width: 6, height: 6)
+                // The marker follows the crop's source coordinate rather than the card
+                // center, so it stays on the selected city at every card aspect ratio.
+                ZStack {
+                    Circle()
+                        .fill(.white.opacity(0.25))
+                        .frame(width: 30, height: 30)
+                        .overlay {
+                            Circle()
+                                .stroke(.white.opacity(0.33), lineWidth: 1)
+                        }
+                    Circle()
+                        .fill(.black)
+                        .frame(width: 7, height: 7)
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 5, height: 5)
+                }
+                .position(markerPosition)
 
                 LinearGradient(
                     colors: isDaytime

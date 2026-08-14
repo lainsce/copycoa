@@ -2,6 +2,8 @@
 
 ## A calm, spatial canvas for ideas
 
+![Copycoa in English with sample canvases and cards](data/Copycoa-English.png)
+
 Copycoa is a native macOS app for arranging notes, references, dates, places, and other useful fragments on canvases. Each canvas keeps a simple four-column rhythm, an optional dot grid, and an open vertical workspace so related ideas can stay visible together.
 
 ## What you can make

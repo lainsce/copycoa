@@ -32,6 +32,7 @@
 		67FF08973027C17000F9DB17 /* Copycoa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Copycoa.entitlements; sourceTree = "<group>"; };
 		67FF08983027C17000F9DB18 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		67FF08993027C17000F9DB19 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		67FF08CB3027C17000F9DB3E /* Copycoa-English.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Copycoa-English.png; sourceTree = "<group>"; };
 		67FF08C13027C17000F9DB30 /* Berlin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Berlin.png; sourceTree = "<group>"; };
 		67FF08C23027C17000F9DB31 /* Cairo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cairo.png; sourceTree = "<group>"; };
 		67FF08C33027C17000F9DB32 /* London.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = London.png; sourceTree = "<group>"; };
@@ -90,6 +91,7 @@
 				67FF08973027C17000F9DB17 /* Copycoa.entitlements */,
 				67FF08983027C17000F9DB18 /* Localizable.xcstrings */,
 				67FF08993027C17000F9DB19 /* PrivacyInfo.xcprivacy */,
+				67FF08CB3027C17000F9DB3E /* Copycoa-English.png */,
 				6724F0D1302E8DFD00F747A0 /* WorldTimeZonesMap.svg */,
 				67FF08D03027C17000F9DB40 /* TimeZoneMaps */,
 				67FF08953027CE1300F9DB17 /* Copycoa.xcassets */,
