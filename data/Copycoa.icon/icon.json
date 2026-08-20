@@ -1,10 +1,13 @@
 {
-  "fill" : {
-    "linear-gradient" : [
-      "display-p3:1.00000,0.95686,0.90980,1.00000",
-      "srgb:1.00000,1.00000,1.00000,1.00000"
-    ]
-  },
+  "fill-specializations" : [
+    {
+      "value" : "system-light"
+    },
+    {
+      "appearance" : "dark",
+      "value" : "system-dark"
+    }
+  ],
   "groups" : [
     {
       "blend-mode-specializations" : [

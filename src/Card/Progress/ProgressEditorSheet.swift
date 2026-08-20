@@ -26,39 +26,48 @@ struct ProgressEditorSheet: View {
     var body: some View {
         Form {
             Section {
-                TextField("Title", text: $title, prompt: Text("Progress"))
+                GLWNFormRow("Title") {
+                    TextField("", text: $title, prompt: Text("Progress"))
+                        .textFieldStyle(GLWNTextFieldStyle())
+                        .accessibilityLabel("Title")
+                }
             } header: {
                 Text("Progress")
             }
 
             Section("Goal") {
-                DatePicker(
-                    "Starts",
-                    selection: $startDate,
-                    displayedComponents: [.date]
-                )
-                DatePicker(
-                    "Goal date",
-                    selection: $goalDate,
-                    in: startDate...,
-                    displayedComponents: [.date]
-                )
+                GLWNFormRow("Starts") {
+                    DatePicker("", selection: $startDate, displayedComponents: [.date])
+                        .labelsHidden()
+                }
+                GLWNFormRow("Goal date") {
+                    DatePicker("", selection: $goalDate, in: startDate..., displayedComponents: [.date])
+                        .labelsHidden()
+                }
             }
 
             Section("Appearance") {
-                ColorPicker("Dot color", selection: $dotColor, supportsOpacity: false)
-                ColorPicker("Background", selection: $backgroundColor, supportsOpacity: false)
+                GLWNFormRow("Dot color") {
+                    ColorPicker("", selection: $dotColor, supportsOpacity: false)
+                        .labelsHidden()
+                }
+                GLWNFormRow("Background") {
+                    ColorPicker("", selection: $backgroundColor, supportsOpacity: false)
+                        .labelsHidden()
+                }
             }
         }
         .formStyle(.grouped)
         .frame(width: 460, height: 370)
         .padding(.top, 8)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", action: dismiss.callAsFunction)
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save", action: save)
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: dismiss.callAsFunction)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: save)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .accent))
                     .keyboardShortcut(.defaultAction)
             }
         }

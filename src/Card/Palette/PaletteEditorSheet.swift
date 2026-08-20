@@ -20,18 +20,25 @@ struct PaletteEditorSheet: View {
     var body: some View {
         Form {
             Section {
-                TextField("Title", text: $title, prompt: Text("Palette"))
+                GLWNFormRow("Title") {
+                    TextField("", text: $title, prompt: Text("Palette"))
+                        .textFieldStyle(GLWNTextFieldStyle())
+                        .accessibilityLabel("Title")
+                }
             } header: {
                 Text("Palette")
             }
 
             Section("Pantone chips") {
                 ForEach(PaletteChipSlot.allCases) { slot in
-                    ColorPicker(
-                        "Chip \(slot.rawValue + 1)",
-                        selection: $colors[slot.rawValue],
-                        supportsOpacity: false
-                    )
+                    GLWNFormRow("Chip \(slot.rawValue + 1)") {
+                        ColorPicker(
+                            "",
+                            selection: $colors[slot.rawValue],
+                            supportsOpacity: false
+                        )
+                        .labelsHidden()
+                    }
                 }
             }
         }
@@ -39,11 +46,13 @@ struct PaletteEditorSheet: View {
         .frame(width: 460, height: 400)
         .padding(.top, 8)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", action: dismiss.callAsFunction)
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save", action: save)
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: dismiss.callAsFunction)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: save)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .accent))
                     .keyboardShortcut(.defaultAction)
             }
         }

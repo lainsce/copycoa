@@ -110,6 +110,16 @@ struct CanvasView: View {
             .focusedSceneValue(\.resizeCardAction, resizeSelectedCardAction)
             .focusedSceneValue(\.deleteCardAction, deleteSelectedCardAction)
             .focusedSceneValue(\.refreshWeatherAction, refreshSelectedWeatherAction)
+            .toolbar {
+                ToolbarSpacer(placement: .navigation)
+                ToolbarItem(placement: .primaryAction) {
+                    AddCardFanView(
+                        isExpanded: $showingCardOptions,
+                        addCard: requestNewCard
+                    )
+                }
+                .sharedBackgroundVisibility(.hidden)
+            }
     }
 
     @ViewBuilder
@@ -169,10 +179,6 @@ struct CanvasView: View {
                 maxHeight: .infinity
             )
             .onGeometryChange(for: CGSize.self) { $0.size } action: { viewportSize = $0 }
-            .overlay(alignment: .bottomTrailing) {
-                AddCardFanView(isExpanded: $showingCardOptions, addCard: requestNewCard)
-                    .zIndex(1)
-            }
             .overlay(alignment: .bottomLeading) {
                 if hasWeatherCard {
                     WeatherAttributionLink()

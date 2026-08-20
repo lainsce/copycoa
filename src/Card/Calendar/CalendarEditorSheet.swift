@@ -27,40 +27,59 @@ struct CalendarEditorSheet: View {
     var body: some View {
         Form {
             Section {
-                Picker("Date type", selection: $dateKind) {
-                    ForEach(CalendarDateKind.allCases) { kind in
+                GLWNFormRow("Date type") {
+                    GLWNSegmentedPicker(
+                        selection: $dateKind,
+                        options: CalendarDateKind.allCases
+                    ) { kind in
                         Label(kind.displayName, systemImage: kind.systemImage)
-                            .tag(kind)
                     }
                 }
-                .pickerStyle(.segmented)
             } header: {
                 Text("Calendar")
             }
 
             Section("When") {
-                DatePicker(
-                    dateKind == .dateRange ? "Starts" : "Date and time",
-                    selection: $startDate,
-                    displayedComponents: [.date, .hourAndMinute]
-                )
-
-                if dateKind == .dateRange {
+                GLWNFormRow(dateKind == .dateRange ? "Starts" : "Date and time") {
                     DatePicker(
-                        "Ends",
-                        selection: $endDate,
-                        in: startDate...,
+                        "",
+                        selection: $startDate,
                         displayedComponents: [.date, .hourAndMinute]
                     )
+                    .labelsHidden()
+                }
+
+                if dateKind == .dateRange {
+                    GLWNFormRow("Ends") {
+                        DatePicker(
+                            "",
+                            selection: $endDate,
+                            in: startDate...,
+                            displayedComponents: [.date, .hourAndMinute]
+                        )
+                        .labelsHidden()
+                    }
                 }
             }
 
             Section("Details") {
-                TextField("Event title", text: $eventTitle, prompt: Text("Event"))
-                TextField("Emoji stickers (in order)", text: $emoji, prompt: Text("Up to 3"))
+                GLWNFormRow("Event title") {
+                    TextField("", text: $eventTitle, prompt: Text("Event"))
+                        .textFieldStyle(GLWNTextFieldStyle())
+                        .accessibilityLabel("Event title")
+                }
+                GLWNFormRow("Emoji stickers (in order)") {
+                    TextField("", text: $emoji, prompt: Text("Up to 3"))
+                        .textFieldStyle(GLWNTextFieldStyle())
+                        .accessibilityLabel("Emoji stickers (in order)")
+                }
 
                 if dateKind == .recurring {
-                    TextField("Repeat label", text: $recurrenceLabel, prompt: Text("Weekly"))
+                    GLWNFormRow("Repeat label") {
+                        TextField("", text: $recurrenceLabel, prompt: Text("Weekly"))
+                            .textFieldStyle(GLWNTextFieldStyle())
+                            .accessibilityLabel("Repeat label")
+                    }
                 }
             }
         }
@@ -68,11 +87,13 @@ struct CalendarEditorSheet: View {
         .frame(width: 540, height: dateKind == .dateRange ? 430 : 390)
         .padding(.top, 8)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", action: dismiss.callAsFunction)
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save", action: save)
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: dismiss.callAsFunction)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: save)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .accent))
                     .keyboardShortcut(.defaultAction)
             }
         }

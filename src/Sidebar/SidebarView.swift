@@ -32,18 +32,21 @@ struct SidebarView: View {
                     delete: { requestDelete(board) }
                 )
             }
-
-            Spacer()
-
-            HStack {
-                Spacer()
-                addBoardButton
-            }
         }
         .padding(8)
-        .padding(.top, 0)
+        .padding(.top, 50)
         .frame(width: 300)
         .frame(maxHeight: .infinity, alignment: .top)
+        .background(GLWNSidebarMaterialSurface())
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("New Canvas", systemImage: "rectangle.badge.plus", action: addBoard)
+                    .labelStyle(.iconOnly)
+                    .help(Text("New Canvas"))
+                    .buttonStyle(GLWNToolbarButtonStyle())
+            }
+            .sharedBackgroundVisibility(.hidden)
+        }
         .confirmationDialog(
             "Delete Canvas?",
             isPresented: $showingDeleteConfirmation,
@@ -59,25 +62,6 @@ struct SidebarView: View {
         }
         .focusedSceneValue(\.deleteCanvasAction, deleteCanvasAction)
         .focusedSceneValue(\.renameCanvasAction, renameCanvasAction)
-    }
-
-    private var addBoardButton: some View {
-        Button {
-            addBoard()
-        } label: {
-            HStack(spacing: 6) {
-                Image(systemName: "plus")
-                Text("New Canvas")
-                    .lineLimit(1)
-                Spacer(minLength: 0)
-            }
-            .font(.body.bold())
-            .frame(maxWidth: 105, maxHeight: 38)
-            .padding(.leading, 12)
-            .background(.gray.opacity(0.12))
-            .containerShape(.capsule)
-        }
-        .buttonStyle(.plain)
     }
 
     private func addBoard() {

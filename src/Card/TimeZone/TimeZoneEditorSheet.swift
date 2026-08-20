@@ -17,15 +17,19 @@ struct TimeZoneEditorSheet: View {
     var body: some View {
         Form {
             Section {
-                Picker("Region", selection: $identifier) {
-                    ForEach(TimeZoneCardPreset.all) { preset in
-                        Text(preset.city)
-                            .tag(preset.identifier)
+                GLWNFormRow("Region") {
+                    GLWNPullDownMenu(
+                        "Region",
+                        selection: $identifier,
+                        options: TimeZoneCardPreset.all.map(\.identifier),
+                        showsTitle: false
+                    ) { identifier in
+                        Text(TimeZoneCardPreset.preset(for: identifier).city)
                     }
                 }
 
                 if let preset = TimeZoneCardPreset.all.first(where: { $0.identifier == identifier }) {
-                    LabeledContent("Time zone") {
+                    GLWNFormRow("Time zone") {
                         Text(verbatim: preset.identifier)
                             .foregroundStyle(.secondary)
                     }
@@ -38,11 +42,13 @@ struct TimeZoneEditorSheet: View {
         .frame(width: 460, height: 220)
         .padding(.top, 8)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel", action: dismiss.callAsFunction)
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save", action: save)
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: dismiss.callAsFunction)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save", action: save)
+                        .buttonStyle(GLWNInContentButtonStyle(tone: .accent))
                     .keyboardShortcut(.defaultAction)
             }
         }

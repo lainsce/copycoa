@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// The bottom add-card surface. Each option keeps the full-color visual language of
-/// the sidebar previews while remaining compact enough for a four-column grid.
+/// The add-card surface. Each option keeps the full-color visual language of the
+/// sidebar previews while remaining compact enough for a four-column grid.
 struct AddCardPickerView: View {
     let addCard: (CardKind) -> Void
     let animation: Animation?
@@ -29,10 +29,6 @@ struct AddCardPickerView: View {
         .frame(maxWidth: .infinity)
         .padding(8)
         .frame(minWidth: 360, maxWidth: 420)
-        .glassEffect(
-            .regular.tint(panelTint),
-            in: RoundedRectangle(cornerRadius: 20, style: .continuous)
-        )
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text("Add Card"))
     }
@@ -52,12 +48,6 @@ struct AddCardPickerView: View {
         colorScheme == .dark
             ? Color(hex: "#523822")
             : Color(hex: "#F5E5D2")
-    }
-
-    private var panelTint: Color {
-        colorScheme == .dark
-            ? Color(hex: "#181818")
-            : Color(hex: "#FFFFFF")
     }
 }
 

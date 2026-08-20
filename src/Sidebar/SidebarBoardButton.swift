@@ -1,13 +1,6 @@
 import SwiftUI
 
-/// Keeps a canvas row visually stable while it is pressed. Selection feedback is provided
-/// by the row background, so the button itself should not fade its label during a click.
-private struct SidebarRowButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-    }
-}
-
+/// Keeps a canvas row visually stable while still exposing a restrained pressed state.
 /// A keyboard- and accessibility-native board selector with a contextual delete action.
 struct SidebarBoardButton: View {
     @Bindable var board: Board
@@ -31,7 +24,7 @@ struct SidebarBoardButton: View {
                 Button(action: select) {
                     rowLabel
                 }
-                .buttonStyle(SidebarRowButtonStyle())
+                .buttonStyle(GLWNSidebarRowButtonStyle())
                 .simultaneousGesture(
                     TapGesture(count: 2).onEnded {
                         beginEditing()
@@ -141,7 +134,7 @@ struct SidebarBoardButton: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .strokeBorder(
-                        Color.accent.opacity(isSelected ? 0.42 : 0),
+                        Color.accent.opacity(isSelected && isHovered ? 0.42 : 0),
                         lineWidth: 0.75
                     )
             }

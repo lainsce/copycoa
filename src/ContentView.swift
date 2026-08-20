@@ -7,29 +7,37 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var selection: UUID?
 
+    private let sidebarWidth: CGFloat = 300
+
     var body: some View {
-        NavigationSplitView {
-            SidebarView(selection: $selection)
-                .navigationSplitViewColumnWidth(
-                    min: 300,
-                    ideal: 300,
-                    max: 300
-                )
-                .toolbar(removing: .sidebarToggle)
-                // Keep the canvas rows at full strength while the app is active. The
-                // split view may otherwise apply its inactive appearance to this column
-                // as focus moves between the sidebar and the detail canvas.
-                .environment(\.appearsActive, scenePhase == .active)
-        } detail: {
-            detail
+        ZStack(alignment: .topLeading) {
+            HStack(spacing: 0) {
+                SidebarView(selection: $selection)
+                    .frame(maxWidth: sidebarWidth, maxHeight: .infinity)
+                    .ignoresSafeArea(.all, edges: .top)
+
+                detail
+                    .ignoresSafeArea(.container, edges: .top)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .ignoresSafeArea(.all, edges: .top)
+
+            // Draw the divider above the HStack so its shadow can bleed into the
+            // canvas without becoming another pane or changing either width.
+            GLWNSidebarBoundaryDivider()
+                // The divider's line is on the overlay's trailing edge, so the
+                // overlay starts just inside the sidebar and ends at the pane
+                // boundary. This keeps the shadow on the sidebar side.
+                .offset(x: sidebarWidth - GLWNSidebarBoundaryDivider.overlayWidth)
                 .ignoresSafeArea(.container, edges: .top)
-                // A NavigationSplitView can report its detail column as inactive while
-                // the sidebar has keyboard focus. Keep the canvas visually active while
-                // the app's scene itself is active; losing window focus may still dim it.
-                .environment(\.appearsActive, scenePhase == .active)
+                .frame(width: GLWNSidebarBoundaryDivider.overlayWidth)
+                .frame(maxHeight: .infinity)
+                .accessibilityHidden(true)
         }
-        .navigationSplitViewStyle(.balanced)
         .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+        // Keep both panes visually active while the app is active. Losing window
+        // focus may still dim the whole scene.
+        .environment(\.appearsActive, scenePhase == .active)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear(perform: ensureSelection)
         .onChange(of: boards.count) { _, _ in

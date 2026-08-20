@@ -36,12 +36,14 @@ struct TextEntrySheet: View {
             Label(title, systemImage: systemImage)
                 .font(.headline)
             TextField(fieldLabel, text: $text, prompt: Text(prompt))
-                .textFieldStyle(.roundedBorder)
+                .textFieldStyle(GLWNTextFieldStyle())
                 .onSubmit(submit)
             HStack {
                 Spacer()
                 Button("Cancel", action: dismiss.callAsFunction)
+                    .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
                 Button(submitTitle, action: submit)
+                    .buttonStyle(GLWNInContentButtonStyle(tone: .accent))
                     .keyboardShortcut(.defaultAction)
                     .disabled(trimmedText.isEmpty)
             }

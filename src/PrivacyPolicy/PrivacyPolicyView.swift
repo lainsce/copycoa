@@ -53,7 +53,9 @@ struct PrivacyPolicyView: View {
                     Button("Done") {
                         dismissWindow(id: "privacy-policy")
                     }
+                    .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
                 }
+                .sharedBackgroundVisibility(.hidden)
             }
         }
         .frame(minWidth: 540, minHeight: 520)

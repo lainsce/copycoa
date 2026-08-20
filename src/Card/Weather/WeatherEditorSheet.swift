@@ -21,15 +21,28 @@ struct WeatherEditorSheet: View {
     var body: some View {
         Form {
             Section("Location") {
-                TextField("Place", text: $location, prompt: Text("City or address"))
+                GLWNFormRow("Place") {
+                    TextField("", text: $location, prompt: Text("City or address"))
+                        .textFieldStyle(GLWNTextFieldStyle())
+                        .accessibilityLabel("Place")
+                }
             }
 
             Section {
-                Toggle("Automatic summary", isOn: $usesAutomaticSummary)
+                GLWNFormRow("Automatic summary") {
+                    Toggle("", isOn: $usesAutomaticSummary)
+                        .labelsHidden()
+                        .toggleStyle(GLWNAquaToggleStyle())
+                        .accessibilityLabel("Automatic summary")
+                }
 
                 if !usesAutomaticSummary {
-                    TextField("Custom summary", text: $summary, axis: .vertical)
-                        .lineLimit(2...4)
+                    GLWNFormRow("Custom summary") {
+                        TextField("", text: $summary, axis: .vertical)
+                            .lineLimit(2...4)
+                            .textFieldStyle(GLWNTextFieldStyle())
+                            .accessibilityLabel("Custom summary")
+                    }
                 }
             } header: {
                 Text("Summary")
@@ -43,9 +56,11 @@ struct WeatherEditorSheet: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel", action: dismiss.callAsFunction)
+                    .buttonStyle(GLWNInContentButtonStyle(tone: .neutral))
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save & Update", action: save)
+                    .buttonStyle(GLWNInContentButtonStyle(tone: .accent))
                     .keyboardShortcut(.defaultAction)
                     .disabled(cleanedLocation.isEmpty)
             }

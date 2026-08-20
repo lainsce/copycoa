@@ -1,5 +1,10 @@
 import SwiftUI
 
+enum CopycoaWindowID {
+    static let about = "about"
+    static let privacyPolicy = "privacy-policy"
+}
+
 private struct NewCanvasActionKey: FocusedValueKey {
     typealias Value = () -> Void
 }
@@ -86,6 +91,16 @@ struct CopycoaCommands: Commands {
     @Environment(\.openWindow) private var openWindow
 
     var body: some Commands {
+        CommandGroup(replacing: .appInfo) {
+            Button("About Copycoa", systemImage: "info.circle") {
+                openWindow(id: CopycoaWindowID.about)
+            }
+        }
+
+        CommandGroup(replacing: .sidebar) {
+            EmptyView()
+        }
+
         CommandGroup(after: .newItem) {
             Button("New Canvas") {
                 newCanvasAction?()
@@ -134,8 +149,8 @@ struct CopycoaCommands: Commands {
         }
 
         CommandGroup(after: .help) {
-            Button("Privacy Policy") {
-                openWindow(id: "privacy-policy")
+            Button("Privacy Policy", systemImage: "hand.raised") {
+                openWindow(id: CopycoaWindowID.privacyPolicy)
             }
         }
     }
